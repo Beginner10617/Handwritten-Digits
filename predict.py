@@ -2,13 +2,12 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from PIL import Image
 import sys
-
 def predict_digit(image_path, model):
     model = load_model(model)
-    image = Image.open(image_path).convert('L')  # grayscale
+    image = Image.open(image_path).convert('L')
     image = image.resize((28, 28))
     image = np.array(image)
-    image = 255 - image  # invert if background is black
+    image = 255 - image 
     image = image / 255.0
     image = image.reshape(1, 28, 28, 1)
     prediction = model.predict(image)

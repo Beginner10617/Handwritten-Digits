@@ -102,13 +102,13 @@ def predict_canvas(model_id):
 
     image_data = data['image'].split(',')[1]
     image_bytes = base64.b64decode(image_data)
-    image = Image.open(io.BytesIO(image_bytes)).convert('L')  # convert to grayscale
+    image = Image.open(io.BytesIO(image_bytes)).convert('L')  
     image = image.resize((28, 28))
 
     image_np = np.array(image)
-    image_np = 255 - image_np  # invert: black digit on white background
-    image_np = image_np / 255.0  # normalize to [0, 1]
-    image_np = image_np.reshape(1, 28, 28, 1)  # shape for CNN input
+    image_np = 255 - image_np  
+    image_np = image_np / 255.0 
+    image_np = image_np.reshape(1, 28, 28, 1) 
 
     model = load_model(MODELS[model_id])
     prediction = model.predict(image_np)
