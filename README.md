@@ -82,7 +82,6 @@ python app.py
 
 ## 📬 Contact
 
-For feedback, queries, or collaboration, feel free to reach out via:
+- **GitHub Issues:** Report Issues [Here](https://github.com/Beginner10617/lxndria/issues)
+- **Email:** wasihusain23@iitk.ac.in
 
-📧 **Email**: [wasihusain23@iitk.ac.in]  
-🐙 **GitHub**: [https://github.com/Beginner10617](https://github.com/Beginner10617)
