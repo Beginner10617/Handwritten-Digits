@@ -37,7 +37,7 @@ An interactive web application to **create, train, test, and use neural networks
 ### ✅ Custom Model Builder
 - Add layers: `Dense`, `Conv2D`, `MaxPooling`, `Flatten`
 - Specify layer parameters (units, activation)
-- Train on MNIST and view accuracy/loss
+- Train on MNIST and view predictions
 - Saved models appear in the sidebar menu
 
 ---
