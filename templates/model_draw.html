@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Use {{ model_id }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            {% for mid in models %}
+                <a class="tab {% if mid == model_id %}active{% endif %}" href="{{ url_for('model_draw', model_id=mid) }}">{{ mid }}</a>
+            {% endfor %}
+            <a class="tab add-tab" href="{{ url_for('add_model') }}">+ Add Model</a>
+        </div>
+        <div class="content">
+            <h2>Using Model: {{ model_id }}</h2>
+
+            <div class="canvas-section">
+                <canvas id="canvas" width="280" height="280"></canvas>
+                <div class="canvas-buttons">
+                    <button onclick="clearCanvas()">Clear</button>
+                    <button onclick="submitCanvas()">Predict</button>
+                </div>
+            </div>
+
+            <hr>
+
+            <form method="POST" action="/predict_image/{{ model_id }}" enctype="multipart/form-data">
+                <label for="image">Upload image:</label>
+                <input type="file" name="image" required>
+                <button type="submit">Predict from Image</button>
+            </form>
+
+            <div id="predictionResult"></div>
+        </div>
+    </div>
+
+    <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    // Initialize canvas to white background
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 20;
+    ctx.lineCap = "round";
+
+    let drawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    canvas.addEventListener("mousedown", (e) => {
+        drawing = true;
+        const rect = canvas.getBoundingClientRect();
+        lastX = e.clientX - rect.left;
+        lastY = e.clientY - rect.top;
+    });
+
+    canvas.addEventListener("mousemove", (e) => {
+        if (!drawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const currentX = e.clientX - rect.left;
+        const currentY = e.clientY - rect.top;
+
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(currentX, currentY);
+        ctx.stroke();
+
+        lastX = currentX;
+        lastY = currentY;
+    });
+
+    canvas.addEventListener("mouseup", () => {
+        drawing = false;
+    });
+
+    canvas.addEventListener("mouseout", () => {
+        drawing = false;
+    });
+
+    function clearCanvas() {
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function submitCanvas() {
+        const dataURL = canvas.toDataURL("image/png");
+        fetch(`/predict_canvas/{{ model_id }}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ image: dataURL })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("predictionResult").innerText =
+                "Predicted digit: " + data.prediction;
+        });
+    }
+</script>
+
+</body>
+</html>

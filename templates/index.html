@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Digit Recognition App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            {% for mid in models %}
+                <a class="tab" href="{{ url_for('model_draw', model_id=mid) }}">{{ mid }}</a>
+            {% endfor %}
+            <a class="tab add-tab" href="{{ url_for('add_model') }}">+ Add Model</a>
+        </div>
+    <div class="content">
+        <h2>Handwritten Digit Recognition Interface</h2>
+        <p>This application allows you to explore and experiment with handwritten digit classification using deep learning models trained on the <strong>MNIST dataset</strong>.</p>
+
+        <h3>What You Can Do:</h3>
+        <ul>
+            <li><strong>Select existing models</strong> (e.g., fully connected or convolutional neural networks) from the left menu to test their predictions.</li>
+            <li><strong>Draw a digit</strong> (0–9) using your mouse on the canvas, or upload an image for recognition.</li>
+            <li><strong>Create and train your own models</strong> using the <code>+ Add Model</code> option — stack layers like Dense, Conv2D, MaxPooling, etc., and save them for testing.</li>
+        </ul>
+
+        <h3>About the Dataset:</h3>
+        <p>The MNIST dataset contains <strong>70,000 grayscale images</strong> of handwritten digits (28x28 pixels), split into:</p>
+        <ul>
+            <li><strong>60,000 training images</strong></li>
+            <li><strong>10,000 testing images</strong></li>
+        </ul>
+
+        <h3>Predefined Models:</h3>
+        <ul>
+            <li>
+                <strong>Model 1 (model1)</strong>: A simple <em>fully connected neural network</em> with two hidden layers of 128 neurons each.<br>
+                Architecture: <code>Flatten → Dense(128) → Dense(128) → Dense(10)</code><br>
+                <strong>Test Accuracy:</strong> 97.69% &nbsp; | &nbsp; <strong>Loss:</strong> 0.0780
+            </li>
+            <li>
+                <strong>Model 2 (model2)</strong>: A <em>convolutional neural network (CNN)</em> with two convolutional layers and max pooling.<br>
+                Architecture: <code>Conv2D(32) → MaxPool → Conv2D(64) → MaxPool → Flatten → Dense(128) → Dense(10)</code><br>
+                <strong>Test Accuracy:</strong> 98.95% &nbsp; | &nbsp; <strong>Loss:</strong> 0.0354
+            </li>
+        </ul>
+
+        <p style="margin-top: 20px;">Start by choosing a model from the sidebar or click <code>+ Add Model</code> to build and train your own custom architecture!</p>
+    </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create New Model</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            {% for mid in models %}
+                <a class="tab" href="{{ url_for('model_draw', model_id=mid) }}">{{ mid }}</a>
+            {% endfor %}
+            <a class="tab add-tab active" href="#">+ Add Model</a>
+        </div>
+        <div class="content">
+            <h2>Create Custom Model</h2>
+            <form method="POST" action="/save_model">
+                <div id="layerBuilder">
+                </div>
+                <button type="button" onclick="addLayer()">+ Add Layer</button>
+                <br><br>
+                <button type="submit">Save Model</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let layerCount = 0;
+
+        function addLayer() {
+            const div = document.createElement("div");
+            div.innerHTML = `
+                <label>Layer Type:</label>
+                <select name="layer_type_${layerCount}">
+                    <option value="dense">Dense</option>
+                    <option value="conv">Conv2D</option>
+                    <option value="maxpool">MaxPooling2D</option>
+                    <option value="flatten">Flatten</option>
+                </select>
+                <label>Units/Filters:</label>
+                <input type="number" name="units_${layerCount}" />
+                <label>Activation:</label>
+                <input type="text" name="activation_${layerCount}" value="relu" />
+                <br><br>
+            `;
+            document.getElementById("layerBuilder").appendChild(div);
+            layerCount++;
+        }
+    </script>
+</body>
+</html>
