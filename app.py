@@ -24,7 +24,19 @@ def index():
 def model_draw(model_id):
     if model_id not in MODELS:
         return "Model not found", 404
-    return render_template("model_draw.html", model_id=model_id, models=MODELS)
+    model_path = MODELS[model_id]
+    if not os.path.exists(model_path):
+        return "Model file does not exist", 404
+    model = load_model(model_path)
+    if model is None:
+        return "Failed to load model", 500
+    x_test, y_test = mnist.load_data()[1]
+    x_test = x_test / 255.0
+    x_test = x_test.reshape(-1, 28, 28, 1)
+    loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
+    loss = round(loss, 4)
+    accuracy = round(accuracy * 100, 2)
+    return render_template("model_draw.html", model_id=model_id, models=MODELS, loss=loss, accuracy=accuracy)
 
 @app.route("/add_model")
 def add_model():
@@ -86,7 +98,6 @@ def save_model():
     model_id = f"model{len(MODELS) + 1}"
     path = f"models/{model_id}.h5"
     model.save(path)
-
     MODELS[model_id] = path  
 
     return redirect(url_for("model_draw", model_id=model_id))
